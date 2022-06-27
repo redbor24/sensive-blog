@@ -1,4 +1,8 @@
 # Byte-compiled / optimized / DLL files
+.idea
+media
+sensive-blog-data.zip
+notes.md
 __pycache__/
 *.py[cod]
 *$py.class
