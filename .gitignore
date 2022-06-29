@@ -3,6 +3,8 @@
 media
 sensive-blog-data.zip
 notes.md
+scratch*.py
+inspectdb.py
 __pycache__/
 *.py[cod]
 *$py.class
