@@ -48,7 +48,7 @@ class Post(models.Model):
         verbose_name='Теги')
 
     def __str__(self):
-        return self.title
+        return f'{self.id}, {self.title}'
 
     def get_absolute_url(self):
         return reverse('post_detail', args={'slug': self.slug})
