@@ -14,7 +14,7 @@ class PostQuerySet(models.QuerySet):
     def fresh(self):
         return self.all().order_by('-published_at')
 
-    def comments_count(self):
+    def fetch_with_comments_count(self):
         post_ids = [post.id for post in self]
         posts_with_comment_count = Post.objects.filter(id__in=post_ids).annotate(
             comments_count=Count('comments')).values_list('id', 'comments_count')
