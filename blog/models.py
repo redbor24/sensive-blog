@@ -1,6 +1,28 @@
-from django.db import models
-from django.urls import reverse
 from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import Count
+from django.urls import reverse
+
+
+class PostQuerySet(models.QuerySet):
+    def year(self, year):
+        return self.filter(published_at__year=year).order_by('published_at')
+
+    def popular(self):
+        return self.annotate(likes_count=Count('likes')).order_by('-likes_count')
+
+    def fresh(self):
+        return self.all().order_by('-published_at')
+
+    def comments_count(self):
+        post_ids = [post.id for post in self]
+        posts_with_comment_count = Post.objects.filter(id__in=post_ids).annotate(
+            comments_count=Count('comments')).values_list('id', 'comments_count')
+        count_for_ids = dict(posts_with_comment_count)
+
+        for post in self:
+            post.comments_count = count_for_ids[post.id]
+        return self
 
 
 class Post(models.Model):
@@ -36,6 +58,13 @@ class Post(models.Model):
         verbose_name = 'пост'
         verbose_name_plural = 'посты'
 
+    objects = PostQuerySet.as_manager()
+
+
+class TagQuerySet(models.QuerySet):
+    def popular(self):
+        return self.annotate(num_posts=Count('posts')).order_by('-num_posts')
+
 
 class Tag(models.Model):
     title = models.CharField('Тег', max_length=20, unique=True)
@@ -53,6 +82,8 @@ class Tag(models.Model):
         ordering = ['title']
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
+
+    objects = TagQuerySet.as_manager()
 
 
 class Comment(models.Model):
