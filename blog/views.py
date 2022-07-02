@@ -7,7 +7,7 @@ def get_related_posts_count(tag):
     return tag.posts.count()
 
 
-def serialize_post_optimized(post):
+def serialize_post(post):
     return {
         'title': post.title,
         'teaser_text': post.text[:200],
@@ -35,9 +35,9 @@ def index(request):
     most_popular_tags = Tag.objects.popular()[:5]
 
     context = {
-        'most_popular_posts': [serialize_post_optimized(post) for post in most_popular_posts],
+        'most_popular_posts': [serialize_post(post) for post in most_popular_posts],
         'popular_tags': [serialize_tag(tag) for tag in most_popular_tags],
-        'page_posts': [serialize_post_optimized(post) for post in most_fresh_posts],
+        'page_posts': [serialize_post(post) for post in most_fresh_posts],
     }
     return render(request, 'index.html', context)
 
@@ -75,7 +75,7 @@ def post_detail(request, slug):
     context = {
         'post': serialized_post,
         'popular_tags': [serialize_tag(tag) for tag in most_popular_tags],
-        'most_popular_posts': [serialize_post_optimized(post) for post in most_popular_posts],
+        'most_popular_posts': [serialize_post(post) for post in most_popular_posts],
     }
     return render(request, 'post-details.html', context)
 
@@ -90,8 +90,8 @@ def tag_filter(request, tag_title):
     context = {
         'tag': tag.title,
         'popular_tags': [serialize_tag(tag) for tag in most_popular_tags],
-        'posts': [serialize_post_optimized(post) for post in related_posts],
-        'most_popular_posts': [serialize_post_optimized(post) for post in most_popular_posts],
+        'posts': [serialize_post(post) for post in related_posts],
+        'most_popular_posts': [serialize_post(post) for post in most_popular_posts],
     }
     return render(request, 'posts-list.html', context)
 

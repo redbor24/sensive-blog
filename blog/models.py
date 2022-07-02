@@ -30,7 +30,7 @@ class PostQuerySet(models.QuerySet):
 class Post(models.Model):
     title = models.CharField('Заголовок', max_length=200)
     text = models.TextField('Текст')
-    slug = models.SlugField('Название в виде url', max_length=200)
+    slug = models.SlugField('Название в виде url', max_length=200, db_index=True)
     image = models.ImageField('Картинка')
     published_at = models.DateTimeField('Дата и время публикации')
 
