@@ -1,7 +1,9 @@
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Count
 from django.urls import reverse
+from django.utils.html import format_html
 
 
 class PostQuerySet(models.QuerySet):
@@ -48,7 +50,7 @@ class Post(models.Model):
         verbose_name='Теги')
 
     def __str__(self):
-        return f'{self.id}, {self.title}'
+        return self.title
 
     def get_absolute_url(self):
         return reverse('post_detail', args={'slug': self.slug})
@@ -59,6 +61,10 @@ class Post(models.Model):
         verbose_name_plural = 'посты'
 
     objects = PostQuerySet.as_manager()
+
+    @admin.display
+    def wrapped_text(self):
+        return format_html('<span>{}...</span>', self.text[:200])
 
 
 class TagQuerySet(models.QuerySet):
