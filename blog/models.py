@@ -49,6 +49,8 @@ class Post(models.Model):
         related_name='posts',
         verbose_name='Теги')
 
+    objects = PostQuerySet.as_manager()
+
     def __str__(self):
         return self.title
 
@@ -59,8 +61,6 @@ class Post(models.Model):
         ordering = ['-published_at']
         verbose_name = 'пост'
         verbose_name_plural = 'посты'
-
-    objects = PostQuerySet.as_manager()
 
     @admin.display
     def wrapped_text(self):
@@ -75,6 +75,8 @@ class TagQuerySet(models.QuerySet):
 class Tag(models.Model):
     title = models.CharField('Тег', max_length=20, unique=True)
 
+    objects = TagQuerySet.as_manager()
+
     def __str__(self):
         return self.title
 
@@ -88,8 +90,6 @@ class Tag(models.Model):
         ordering = ['title']
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
-
-    objects = TagQuerySet.as_manager()
 
 
 class Comment(models.Model):
